@@ -1,8 +1,8 @@
 function [Xoutput, Xhatoutput, noise] = LEO_3_Particle(std_n, noise_switch)
     rng('default')
     %% SYSTEM
-    step = 0.0001;   %可調 0.001
-    final = 5;
+    step = 0.0001;   % sampling frequency
+    final = 5; % total running time
     t = 0:step:(final - 1);
     
     d = 0.5;
@@ -12,21 +12,21 @@ function [Xoutput, Xhatoutput, noise] = LEO_3_Particle(std_n, noise_switch)
     
     std_w = 0.1;
     if noise_switch == 0
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     高斯雜訊     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     Gassian noise     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         w = normrnd(0, std_w, 4, (final - 1) / step + 1);
         noise = normrnd(0, std_n, 2, (final - 1)/step + 1);
     elseif noise_switch == 1
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    複合週期波    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % 定義多個不同頻率的sin波
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    Composite wave   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % define sine waves with different frequencies
         f1 = 0.5;  % 5Hz
         f2 = 1; % 15Hz
         f3 = 3; % 30Hz
         
-        % 複合週期波：將多個頻率的sin波相加
+        % composition of sine waves
         w = normrnd(0, std_w, 4, (final - 1) / step + 1);
         noise = normrnd(0, std_n, 2, (final - 1)/step + 1) + (0.05*sin(2*pi*f1*t) + 0.03*sin(2*pi*f2*t)) .* [1; 1];
     elseif noise_switch == 2   
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    方波    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    Pulse noise    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Generate Bernoulli-Gaussian impulse noise
         p = 0.3;
         b = rand(1, (final - 1) / step + 1) < p; % Bernoulli random variable
@@ -34,7 +34,7 @@ function [Xoutput, Xhatoutput, noise] = LEO_3_Particle(std_n, noise_switch)
         w = normrnd(0, std_w, 4, (final - 1) / step + 1);
         noise = b .* g; % Combine Bernoulli and Gaussian
     elseif noise_switch == 3 
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    Rician 波    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    Rician noise    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         r = makedist('Rician', 's', 1, 'sigma', std_n);
         w = normrnd(0, std_w, 4, (final - 1) / step + 1);
         noise = random(r, 2, (final - 1) / step + 1);
