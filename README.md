@@ -1,7 +1,7 @@
-# Particle Filter for Smoothing Time Series Model
+# Particle Filter for Time Series Model
 
 ## Overview
-This MATLAB function implements a particle filter for estimating state variables in a smoothing time series model. It incorporates different types of Gaussian and non-Gaussian noise models and performs state estimation using a particle-based Bayesian filtering approach.
+This MATLAB function implements a particle filter for estimating state variables in a time-series model. It incorporates different types of Gaussian and non-Gaussian noise models and performs state estimation using a particle-based Bayesian filtering approach.
 
 ## Features
 - Implements a particle filter with residual resampling.
